@@ -3,13 +3,16 @@
     import {fade} from "svelte/transition";
 
     let selectedTab = 0;
+
+    //disables
     let copied = false;
 
     //checkboxes
     let dryRun = true;
     let archiveMode = true;
     let compress = true;
-    let showProgress = true;
+    let showProgress = false;
+    let showProgress2 = true;
     let partial = false;
     let verbose = false;
     let humanReadable = false;
@@ -29,7 +32,9 @@
     let fileSizeLimit: null | number = null;
     let sshPort: null | number = 22;
 
+    // output
     let output: null | string = null;
+
 
     $: {
         let rsyncCommand = 'rsync ';
@@ -38,6 +43,7 @@
             rsyncCommand += archiveMode ? '--archive ' : '';
             rsyncCommand += compress ? '--compress ' : '';
             rsyncCommand += showProgress ? '--progress ' : '';
+            rsyncCommand += showProgress2 ? '--info=progress2 ' : '';
             rsyncCommand += verbose ? '--verbose ' : '';
             rsyncCommand += humanReadable ? '--human-readable ' : '';
             rsyncCommand += removeSource ? '--remove-source-files ' : '';
@@ -157,7 +163,7 @@
     <hr class="my-5">
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 w-full gap-5">
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={dryRun}/>
             <div>
                 <p>Dry Run</p>
@@ -165,7 +171,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={archiveMode}/>
             <div>
                 <p>Archive mode</p>
@@ -173,7 +179,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={compress}/>
             <div>
                 <p>Compress</p>
@@ -181,15 +187,23 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
-            <input class="checkbox" type="checkbox" bind:checked={showProgress}/>
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
+            <input on:click={() => showProgress2 = false} class="checkbox" type="checkbox" bind:checked={showProgress}/>
             <div>
                 <p>Show Progress</p>
                 <span class="text-sm text-surface-400">Show progress during transfer</span>
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
+            <input on:click={() => showProgress = false} class="checkbox" type="checkbox" bind:checked={showProgress2}/>
+            <div>
+                <p>Show Progress 2</p>
+                <span class="text-sm text-surface-400">Option shows statistics based on the whole transfer.</span>
+            </div>
+        </label>
+
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={partial}/>
             <div>
                 <p>Partial</p>
@@ -197,7 +211,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={verbose}/>
             <div>
                 <p>Verbose</p>
@@ -205,7 +219,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={humanReadable}/>
             <div>
                 <p>Human Readable</p>
@@ -213,7 +227,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={removeSource}/>
             <div>
                 <p>Remove Source</p>
@@ -221,7 +235,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={deleteDestination}/>
             <div>
                 <p>Delete</p>
@@ -229,7 +243,7 @@
             </div>
         </label>
 
-        <label class="flex items-center space-x-2">
+        <label class="flex items-center space-x-2 select-none cursor-pointer">
             <input class="checkbox" type="checkbox" bind:checked={update}/>
             <div>
                 <p>Update</p>
